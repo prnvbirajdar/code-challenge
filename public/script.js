@@ -1,3 +1,9 @@
+// Helper function to format timestamps ("YYYY-MM-DD HH:MM:SS")
+const formatTimestamp = (timestamp) => {
+  const date = new Date(parseInt(timestamp));
+  return date.toISOString().slice(0, 19).replace("T", " ");
+}
+
 // Client-side fetch call
 const fetchAndRenderData = async () => {
   const outputElement = document.getElementById('output');
@@ -41,9 +47,18 @@ const fetchAndRenderData = async () => {
 
     data.forEach(user => {
       const bodyRow = document.createElement('tr');
-      Object.values(user).forEach(value => {
+
+      Object.keys(user).forEach(key => {
         const td = document.createElement('td');
-        td.textContent = value;
+        const value = user[key];
+
+        // Format the start and end timestamps
+        if (key === 'start' || key === 'end') {
+          td.textContent = formatTimestamp(value);
+        } else {
+          td.textContent = value;
+        }
+
         bodyRow.appendChild(td);
       });
       tbody.appendChild(bodyRow);
